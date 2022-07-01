@@ -1,0 +1,12 @@
+spring:
+  profiles:
+    active: ${PROFILE:local}
+  servlet:
+    multipart:
+      max-file-size: '4MB'
+      max-request-size: '4MB'
+    session:
+      tracking-modes: 'cookie'
+
+image:
+  folder: ${IMAGE_FOLDER}

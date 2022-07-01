@@ -1,0 +1,65 @@
+<html xmlns:th="https://www.thymeleaf.org">
+
+<head>
+	<title>DDS Upload</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+	<script>
+		function placeholderImage() {
+			var width = document.getElementById('width').options[document.getElementById('width').selectedIndex].value;
+			var height = document.getElementById('height').options[document.getElementById('height').selectedIndex].value;
+			document.getElementById('placeholder').src = 'https://picsum.photos/' + width + '/' + height;
+			document.getElementById('exwidth').textContent = width;
+			document.getElementById('exheight').textContent = height;
+		}
+	</script>
+</head>
+
+<body>
+	<div class="container" style="max-width:410px">
+		<h1>Upload, Resize & Convert to DDS</h1>
+		<div class="alert alert-primary alert-dismissible fade show" role="alert">
+			<strong>Tip</strong> You can stack your images to assemble pictures higher than 256 pixels.
+		</div>
+		<p class="text-danger" th:if="${errorMessage}" th:text="${errorMessage}"></p>
+		<p class="text-success" th:if="${successMessage}" th:text="${successMessage}"></p>
+		<p class="text-info" th:if="${linkMessage}" th:text="${linkMessage}"></p>
+		<form method="POST" enctype="multipart/form-data" action="/uploadImage">
+			<div class="text-center">
+				<img id="placeholder" src="https://picsum.photos/256/256" class="img-thumbnail" />
+				<h4>&harr;<span id="exwidth">256</span> &varr;<span id="exheight">256</span></h4>
+			</div>
+			<div class="form-group">
+				<label for="name">Nom (Max. 30 char)</label>
+				<input type="text" id="name" name="name" maxlength="30">
+			</div>
+			<div class="form-group">
+				<label for="width">Largeur</label>
+				<select id="width" name="width" class="form-select" onchange="placeholderImage()">
+					<option value="256" selected>256px</option>
+					<option value="128">128px</option>
+					<option value="64">64px</option>
+					<option value="32">32px</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label for="height">Hauteur</label>
+				<select id="height" name="height" class="form-select" onchange="placeholderImage()">
+					<option value="256" selected>256px</option>
+					<option value="128">128px</option>
+					<option value="64">64px</option>
+					<option value="32">32px</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label for="image">Image (Max. 4MB)</label>
+				<input type="file" accept=".jpg,.gif,.png" class="form-control-file" id="image" name="image">
+			</div>
+			<div class="alert alert-dark alert-dismissible fade show" role="alert">
+				<strong>Warning</strong> Any use of inappropriate image will result in prosecution and ban.
+			</div>
+			<button type="submit" class="btn btn-primary">Téléverser</button>
+		</form>
+	</div>
+</body>
+
+</html>
