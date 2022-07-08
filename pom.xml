@@ -16,7 +16,7 @@
 	<version>1.0.0-SNAPSHOT</version>
 
 	<name>DDS Upload</name>
-	<description>a SpringBoot project to upload, resize and convert JPEG/PNG/GIF to DDS</description>
+	<description>a SpringBoot project to upload, resize/crop and convert JPEG/PNG/GIF to DDS</description>
 
 	<properties>
 		<java.version>17</java.version>

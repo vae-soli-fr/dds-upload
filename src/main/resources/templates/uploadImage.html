@@ -16,7 +16,7 @@
 
 <body>
 	<div class="container" style="max-width:410px">
-		<h1>Upload, Resize & Convert to DDS</h1>
+		<h1>Upload, Modify & Convert to DDS</h1>
 		<div class="alert alert-primary alert-dismissible fade show" role="alert">
 			<strong>Tip</strong> You can stack your images to assemble pictures higher than 256 pixels.
 		</div>
@@ -31,6 +31,13 @@
 			<div class="form-group">
 				<label for="name">Nom (Max. 30 char)</label>
 				<input type="text" id="name" name="name" maxlength="30">
+			</div>
+			<div class="form-group">
+				<label for="mode">Mode</label>
+				<select id="mode" name="mode" class="form-select">
+					<option value="resize" selected>Resize: ignore proportions</option>
+					<option value="crop">Crop: zoom in center</option>
+				</select>
 			</div>
 			<div class="form-group">
 				<label for="width">Largeur</label>

@@ -8,6 +8,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import fr.melua.dds.api.UploadApi;
 import fr.melua.dds.service.ImageService;
+import fr.melua.dds.service.ModifyMode;
 import fr.melua.dds.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 
@@ -17,7 +18,7 @@ public class ImageUploadController implements UploadApi {
 
     private final ImageService imageService;
 
-    public String uploadImage(MultipartFile imageFile, String name, Integer width, Integer height, RedirectAttributes redirectAttributes) {
+    public String uploadImage(MultipartFile imageFile, String name, String mode, Integer width, Integer height, RedirectAttributes redirectAttributes) {
 
         if(imageFile.isEmpty()) {
             redirectAttributes.addFlashAttribute("errorMessage", "Please choose file to upload.");
@@ -39,6 +40,13 @@ public class ImageUploadController implements UploadApi {
             return "redirect:/";
         }
         
+        ModifyMode modifyMode = ModifyMode.fromString(mode);
+        
+        if (modifyMode == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Invalid mode.");
+            return "redirect:/";
+        }
+        
         File original = imageService.upload(imageFile);
         
         if(original == null) {
@@ -47,18 +55,18 @@ public class ImageUploadController implements UploadApi {
 
         }
         
-        File resized = imageService.resize(original, name, width, height);
+        File modified = imageService.modify(original, name, modifyMode, width, height);
 
         imageService.delete(original);
 
-        if(resized == null) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Resize failed.");
+        if(modified == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", modifyMode + " failed.");
             return "redirect:/";
         }
        
-        String code = imageService.convert(resized);
+        String code = imageService.convert(modified);
 
-        imageService.delete(resized);
+        imageService.delete(modified);
 
         if(code == null) {
             redirectAttributes.addFlashAttribute("errorMessage", "Conversion failed.");

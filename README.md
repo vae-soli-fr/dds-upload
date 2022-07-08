@@ -3,4 +3,4 @@
 Vae Soli DDS Upload
 ==============
 
-a SpringBoot project to upload, resize and convert JPEG/PNG/GIF to DDS
+a SpringBoot project to upload, resize/crop and convert JPEG/PNG/GIF to DDS

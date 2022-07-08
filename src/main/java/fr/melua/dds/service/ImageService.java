@@ -3,7 +3,6 @@ package fr.melua.dds.service;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -47,7 +46,7 @@ public class ImageService {
             log.warn("Suspicious file {} with mime type {}", imageFile.getOriginalFilename(), mime);
             return false;
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
             return false;
         }
@@ -62,13 +61,13 @@ public class ImageService {
 
             return path.toFile();
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
             return null;
         }
     }
 
-    public File resize(File sourceFile, String name, int width, int height) {
+    public File modify(File sourceFile, String name, ModifyMode mode, int width, int height) {
     	
     	if (!MathUtils.isPow2(width) || !MathUtils.isPow2(height)) {
     		return null;
@@ -81,16 +80,28 @@ public class ImageService {
             BufferedImage bufferedImage = new BufferedImage( sourceImage.getWidth(), sourceImage.getHeight(), BufferedImage.TYPE_INT_RGB);
             bufferedImage.createGraphics().drawImage(sourceImage, 0, 0, Color.WHITE, null);
             
-            BufferedImage outputImage = Scalr.resize(bufferedImage, Mode.FIT_EXACT, width, height);
+            BufferedImage outputImage;
             
+            switch(mode) {
+            	case CROP:
+                	int x = calculatePoint(bufferedImage.getWidth(), width);
+                	int y = calculatePoint(bufferedImage.getHeight(), height);
+                	outputImage = Scalr.crop(bufferedImage, x, y, width, height);
+                	break;
+
+                default:
+            	case RESIZE:
+            		outputImage = Scalr.resize(bufferedImage, Mode.FIT_EXACT, width, height);
+            }
+
             File newImageFile = Paths.get(imageFolder, StringUtils.join(".", StringUtils.join("_", sanitizer(name), width, height), JPEG)).toFile();
             ImageIO.write(outputImage, JPEG, newImageFile);
             outputImage.flush();
-            log.info("Resized {} => {}", sourceFile, newImageFile);
+            log.info("Modified {} >{}> {}", sourceFile, mode, newImageFile);
 
             return newImageFile;
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
             return null;
         }
@@ -105,7 +116,7 @@ public class ImageService {
 
         	return StringUtils.concat("[img]", path.getFileName(), "[/img]");
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
             return null;
         }
@@ -118,7 +129,7 @@ public class ImageService {
 
         	return true;
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
             return false;
         }
@@ -132,4 +143,11 @@ public class ImageService {
     	return name.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
     }
     
+    private static int calculatePoint(int src, int dst) {
+    	if (src < dst) {
+    		throw new IllegalArgumentException("Original size must be bigger than target.");
+    	}
+    	return Math.subtractExact(src/2, dst/2);
+    }
+
 }

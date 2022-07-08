@@ -19,6 +19,7 @@ public interface UploadApi {
 
 	@PostMapping("/uploadImage")
 	String uploadImage(@RequestParam("image") MultipartFile imageFile, @RequestParam("name") @Size(max = 30) String name,
+			@RequestParam(value = "mode") String mode,
 			@RequestParam(value = "width", defaultValue = "256") @Min(32) @Max(256) Integer width,
 			@RequestParam(value = "height", defaultValue = "256") @Min(32) @Max(256) Integer height,
 			RedirectAttributes redirectAttributes);
