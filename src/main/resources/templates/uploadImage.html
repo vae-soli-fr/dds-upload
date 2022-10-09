@@ -2,7 +2,9 @@
 
 <head>
 	<title>DDS Upload</title>
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<script src="js/jquery.slim.js"></script>
+	<script src="js/bootstrap.min.js"></script>
 	<script>
 		function placeholderImage() {
 			var width = document.getElementById('width').options[document.getElementById('width').selectedIndex].value;
@@ -11,18 +13,35 @@
 			document.getElementById('exwidth').textContent = width;
 			document.getElementById('exheight').textContent = height;
 		}
+		$('.alert').alert();
 	</script>
 </head>
 
 <body>
 	<div class="container" style="max-width:410px">
 		<h1>Upload, Modify & Convert to DDS</h1>
-		<div class="alert alert-primary alert-dismissible fade show" role="alert">
+		<div class="alert alert-primary" role="alert">
 			<strong>Tip</strong> You can stack your images to assemble pictures higher than 256 pixels.
 		</div>
-		<p class="text-danger" th:if="${errorMessage}" th:text="${errorMessage}"></p>
-		<p class="text-success" th:if="${successMessage}" th:text="${successMessage}"></p>
-		<p class="text-info" th:if="${linkMessage}" th:text="${linkMessage}"></p>
+		<div class="alert alert-warning alert-dismissible fade show" role="alert" th:if="${errorMessage}">
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			<div th:text="${errorMessage}"></div>
+		</div>
+		<div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${successMessage}">
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			<div th:text="${successMessage}"></div>
+		</div>
+		<div class="alert alert-warning alert-dismissible fade show" role="alert" th:if="${linkMessage}">
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			✨ Add this code to your description
+			<code>[img]<span th:text="${linkMessage}"></span>[/img]</code>
+		</div>
 		<form method="POST" enctype="multipart/form-data" action="/uploadImage">
 			<div class="text-center">
 				<img id="placeholder" src="https://picsum.photos/256/256" class="img-thumbnail" />
@@ -61,7 +80,7 @@
 				<label for="image">Image (Max. 4MB)</label>
 				<input type="file" accept=".jpg,.gif,.png" class="form-control-file" id="image" name="image">
 			</div>
-			<div class="alert alert-dark alert-dismissible fade show" role="alert">
+			<div class="alert alert-dark" role="alert">
 				<strong>Warning</strong> Any use of inappropriate image will result in prosecution and ban.
 			</div>
 			<button type="submit" class="btn btn-primary">Téléverser</button>

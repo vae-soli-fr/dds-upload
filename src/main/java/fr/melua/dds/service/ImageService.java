@@ -114,7 +114,7 @@ public class ImageService {
         	Files.write(path, data);
         	log.info("Converted {} => {}", newFile, path);
 
-        	return StringUtils.concat("[img]", path.getFileName(), "[/img]");
+        	return path.getFileName().toString();
 
         } catch (Exception e) {
             log.error(e.getMessage(), e);
