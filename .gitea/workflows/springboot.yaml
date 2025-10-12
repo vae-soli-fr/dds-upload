@@ -1,0 +1,24 @@
+name: SpringBoot build
+
+on: [push, pull_request]
+
+jobs:
+  scanning:
+    name: SpringBoot build
+    runs-on: linux_amd64
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Build target
+        run: mvn package
+        env:
+          JAVA_HOME: /usr/lib/jvm/java-17-openjdk
+      - name: Release artifacts
+        uses: akkuman/gitea-release-action@v1
+        with:
+          files: target/*.jar
+          tag_name: latest-${{ gitea.ref_name }}
+          sha256sum: true
+          prerelease: true
