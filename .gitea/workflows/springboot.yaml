@@ -1,6 +1,9 @@
 name: SpringBoot build
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - master
 
 jobs:
   scanning:
