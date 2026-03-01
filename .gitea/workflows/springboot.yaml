@@ -17,7 +17,7 @@ jobs:
       - name: Build target
         run: mvn package
         env:
-          JAVA_HOME: /usr/lib/jvm/java-17-openjdk
+          JAVA_HOME: /usr/lib/jvm/java-21-openjdk
       - name: Release artifacts
         uses: akkuman/gitea-release-action@v1
         with:
